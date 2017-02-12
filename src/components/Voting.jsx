@@ -3,6 +3,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux';
 import Winner from './Winner';
 import Vote from './Vote';
+import * as actionCreators from '../action_creators';
 
 export const Voting = React.createClass({
   mixins: [PureRenderMixin],
@@ -50,7 +51,10 @@ into an object of props. Those props will then be merged into the props
 of the component that's being connected. In the case of Voting, we just
 need to map the pair and winner from the state. */
 
-export const VotingContainer = connect(mapStateToProps)(Voting);
+export const VotingContainer = connect(
+  mapStateToProps,
+  actionCreators
+)(Voting);
 
 /* True to functional style, the connect function doesn't actually go and
 mutate the Voting component. Voting remains a pure, unconnected component.
@@ -70,3 +74,12 @@ The connected/smart component, on the other hand, wraps the pure version
 with some logic that will keep it in sync with the changing state of the
 Redux Store. That logic is provided by react-redux. */
 
+
+/* We have a vote callback prop on Voting, and a vote action creator.
+Both have the same name and the same function signature: A single argument,
+which is the entry being voted. What we can do is simply give our action
+creators to the react-redux connect function as the second argument, and the
+connection will be made. The effect of this is that a vote prop will be given
+to Voting. That prop is a function that creates an action using the vote action
+creator, and also dispatches that action to the Redux Store. Thus, clicking a
+vote button now dispatches an action. */
